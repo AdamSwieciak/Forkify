@@ -1,4 +1,5 @@
 import Search from "./models/Search";
+import Recipe from "./models/Recipe";
 import * as searchView from "./view/searchView";
 import { elements, renderLoader, clearLoader } from "./view/base";
 
@@ -8,6 +9,8 @@ import { elements, renderLoader, clearLoader } from "./view/base";
 // *shopping list object
 // *liked recipes
 const state = {};
+
+// SEARCH CONTROLLER
 
 const controlSearch = async () => {
   //Get query rom the view
@@ -34,3 +37,18 @@ elements.searchForm.addEventListener("submit", e => {
   e.preventDefault();
   controlSearch();
 });
+
+elements.searchResPages.addEventListener("click", e => {
+  const btn = e.target.closest(".btn-inline");
+  if (btn) {
+    const goToPage = parseInt(btn.dataset.goto, 10);
+    searchView.clearResult();
+    searchView.renderResult(state.search.result, goToPage);
+  }
+});
+
+// RECIPE CONTROLLER
+
+const r = new Recipe(47746);
+r.getRecipe();
+console.log(r);
