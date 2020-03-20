@@ -1,5 +1,6 @@
 import Search from "./models/Search";
 import Recipe from "./models/Recipe";
+import List from "./models/List";
 import * as searchView from "./view/searchView";
 import * as recipeView from "./view/searchRecipe";
 import { elements, renderLoader, clearLoader } from "./view/base";
@@ -63,6 +64,8 @@ const controlRecipe = async () => {
     //PREPARE UI FOR CHANGED
     recipeView.clearRecipe();
     renderLoader(elements.recipe);
+
+    if (state.search) searchView.highlightSelected(id);
     //CREATE NEW RECIPE OBJECT
     state.recipe = new Recipe(id);
 
@@ -85,3 +88,19 @@ const controlRecipe = async () => {
 ["hashchange", "load"].forEach(event =>
   window.addEventListener(event, controlRecipe)
 );
+
+// HANDLING RECIPE BUTTON CLICKS
+elements.recipe.addEventListener("click", e => {
+  if (e.target.matches(".btn-decrease, .btn-decrease *")) {
+    //decease is clicked
+    if (state.recipe.servings > 1) {
+      state.recipe.updateServings("dec");
+      recipeView.updateServingsIngedient(state.recipe);
+    }
+  } else if (e.target.matches(".btn-increase, .btn-increase *")) {
+    state.recipe.updateServings("inc");
+    recipeView.updateServingsIngedient(state.recipe);
+  }
+});
+
+window.l = new List();
